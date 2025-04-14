@@ -50,7 +50,7 @@ router.post(
       };
 
       // Sign the JWT with your secret key
-      const token = jwt.sign(payload, "your_jwt_secret_key", {
+      const token = jwt.sign(payload, "mysecrettoken", {
         expiresIn: "1h", // Token expiry time
       });
 
@@ -111,7 +111,7 @@ router.post("/validate", async (req, res) => {
 
   try {
     // Verify the token
-    const decoded = jwt.verify(token, "your_jwt_secret_key");
+    const decoded = jwt.verify(token, "mysecrettoken");
 
     // Check if the number matches
     if (decoded.randomNumber !== number) {
