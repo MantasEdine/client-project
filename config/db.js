@@ -4,7 +4,7 @@ require("dotenv").config();
 ////mongoURI="mongodb+srv://larbi26:yTpyUiVqGi2vRj98@cluster0.ppobd.mongodb.net/pharmacy?retryWrites=true&w=majority&appName=Cluster0"
 // const db = "mongodb://localhost:27017/larbi";
 const db =
-  "mongodb+srv://larbi26:yTpyUiVqGi2vRj98@cluster0.ppobd.mongodb.net/pharrdrmmaccccyy?retryWrites=true&w=majority&appName=Cluster0";
+  "mongodb+srv://youcefmantas3:TYWu6NCr8Fl41Do2@pharmacy.dyji6k1.mongodb.net/?retryWrites=true&w=majority&appName=Pharmacy";
 
 const connectDB = async () => {
   try {
