@@ -422,13 +422,14 @@ router.put(
       email,
       willaya,
       category,
+      adresse,
       password,
       status,
       subscribes,
       nomSociete,
       // Notice we're not destructuring dataPdf from req.body
     } = req.body;
-
+    console.log("Backend response:", req.body);
     try {
       // Find the actor by ID
       let actor = await Actor1.findById(id);
@@ -452,6 +453,7 @@ router.put(
       if (nom) actor.nom = nom;
       if (prenom) actor.prenom = prenom;
       if (telephone) actor.telephone = telephone;
+      if (adresse) actor.adresse = adresse;
       if (email) actor.email = email;
       if (willaya) actor.willaya = willaya;
       if (category) actor.category = category;

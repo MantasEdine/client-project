@@ -22,7 +22,7 @@ connectDB();
 // Enable CORS
 app.use(
   cors({
-    origin: "https://elsaidaliya.netlify.app",
+    origin: "*",
     credentials: true,
   })
 );

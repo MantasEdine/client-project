@@ -40,6 +40,10 @@ const ActorSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  adresse: {
+    type: String,
+    require: false,
+  },
   logo: {
     // New Field
     type: String,
