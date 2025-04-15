@@ -20,7 +20,12 @@ dotenv.config();
 connectDB();
 
 // Enable CORS
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://elsaidaliya.netlify.app",
+    credentials: true,
+  })
+);
 const morgan = require("morgan");
 
 app.use(morgan("dev")); // Logs requests in the 'dev' format, which is concise and includes status code, response time, and other useful details
