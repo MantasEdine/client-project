@@ -5,7 +5,7 @@ const Admin = require("../../models/Admin"); // Adjust the path to your Admin mo
 const router = express.Router();
 
 // Replace with your secret key for JWT
-const JWT_SECRET = "mysecrettoken";
+const JWT_SECRET = "your_jwt_secret_key";
 
 // Admin Registration
 router.post("/register", async (req, res) => {
