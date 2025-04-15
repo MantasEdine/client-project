@@ -20,7 +20,7 @@ dotenv.config();
 connectDB();
 
 // Enable CORS
-
+app.use(cors());
 const morgan = require("morgan");
 
 app.use(morgan("dev")); // Logs requests in the 'dev' format, which is concise and includes status code, response time, and other useful details
