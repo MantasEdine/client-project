@@ -144,84 +144,73 @@ router.post("/validate", async (req, res) => {
 // @route    POST api/auth
 // @desc     Authenticate user and get token
 // @access   Public
-router.post(
-  "/",
-  [
-    check("numberPhone", "Please include a valid phone number").isMobilePhone(),
-    check("password", "Password is required").exists(),
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+router.post("/", async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { numberPhone, password } = req.body;
+
+  try {
+    let actor = await Actor1.findOne({ telephone: numberPhone });
+    if (!actor) {
+      return res.status(400).json({ errors: [{ msg: "User does not exist" }] });
     }
 
-    const { numberPhone, password } = req.body;
+    if (!actor.status) {
+      console.log(actor.status);
+      return res
+        .status(400)
+        .json({ errors: [{ msg: "User does not have access" }] });
+    }
 
-    try {
-      let actor = await Actor1.findOne({ telephone: numberPhone });
-      if (!actor) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: "User does not exist" }] });
-      }
+    // Check if the subscription is still valid
+    const now = new Date();
+    if (new Date(actor.subscribes) < now) {
+      return res.status(400).json({
+        errors: [
+          {
+            msg: "Subscription has expired. Please renew your subscription.",
+          },
+        ],
+      });
+    }
 
-      if (!actor.status) {
-        console.log(actor.status);
-        return res
-          .status(400)
-          .json({ errors: [{ msg: "User does not have access" }] });
-      }
+    const isMatch = await bcrypt.compare(password, actor.password);
+    if (!isMatch) {
+      return res.status(400).json({ errors: [{ msg: "Incorrect password" }] });
+    }
 
-      // Check if the subscription is still valid
-      const now = new Date();
-      if (new Date(actor.subscribes) < now) {
-        return res.status(400).json({
-          errors: [
-            {
-              msg: "Subscription has expired. Please renew your subscription.",
-            },
-          ],
+    const payload = {
+      actor: {
+        id: actor.id,
+        category: actor.category,
+        status: actor.status,
+      },
+    };
+
+    jwt.sign(
+      payload,
+      process.env.JWT_SECRET || "mysecrettoken", // Token expiration (optional)
+      (err, token) => {
+        if (err) throw err;
+        res.status(200).json({
+          category: actor.category,
+          token,
+          msg: "Log in successful",
+          name: actor.name,
+          id: actor.id,
+          numberPhone: actor.telephone,
+          email: actor.email,
         });
       }
-
-      const isMatch = await bcrypt.compare(password, actor.password);
-      if (!isMatch) {
-        return res
-          .status(400)
-          .json({ errors: [{ msg: "Incorrect password" }] });
-      }
-
-      const payload = {
-        actor: {
-          id: actor.id,
-          category: actor.category,
-          status: actor.status,
-        },
-      };
-
-      jwt.sign(
-        payload,
-        process.env.JWT_SECRET || "mysecrettoken", // Token expiration (optional)
-        (err, token) => {
-          if (err) throw err;
-          res.status(200).json({
-            category: actor.category,
-            token,
-            msg: "Log in successful",
-            name: actor.name,
-            id: actor.id,
-            numberPhone: actor.telephone,
-            email: actor.email,
-          });
-        }
-      );
-    } catch (err) {
-      console.error(err.message);
-      res.status(500).send("Server error");
-    }
+    );
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
   }
-);
+});
 
 // @route    POST api/register
 // @desc     Register user
