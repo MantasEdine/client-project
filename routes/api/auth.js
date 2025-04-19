@@ -359,7 +359,8 @@ router.put("/updatesos/:id", async (req, res) => {
     if (!actor) return res.status(404).json({ msg: "Actor not found" });
 
     // Update the offer and status
-    if (status !== undefined) actor.status = status;
+    if (status !== "undefined") actor.status = req.body.status;
+    console.log(req.body.status);
     if (offre) actor.offre = offre; // Update the offer
 
     await actor.save(); // Save the updated actor

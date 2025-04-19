@@ -52,6 +52,7 @@ app.get("/hello", (req, res) => {
 
 // Define Routes
 app.use("/api/auth", require("./routes/api/auth"));
+
 app.use("/api/product", require("./routes/api/product"));
 app.use("/api/productCota", require("./routes/api/productCota"));
 app.use("/api/offer", require("./routes/api/offre"));
